@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download } from "lucide-react";
+import { RiskGauge } from "@/components/risk-gauge";
 
 export default function Output() {
   const [dialogOpen, setDialogOpen] = useState(false);
@@ -115,6 +116,15 @@ export default function Output() {
                 </div>
               </div>
             </div>
+          </CardContent>
+        </Card>
+
+        <Card className="card-simple">
+          <CardHeader>
+            <CardTitle className="text-base">Overall Risk Assessment</CardTitle>
+          </CardHeader>
+          <CardContent className="flex justify-center py-8">
+            <RiskGauge score={72} label="Risk Score" data-testid="gauge-risk-score" />
           </CardContent>
         </Card>
 
