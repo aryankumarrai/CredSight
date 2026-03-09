@@ -13,7 +13,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
 
   return (
     <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
-      <header className="border-b border-card-border bg-card">
+      <header className="border-b border-card-border" style={{ backgroundColor: "#181915" }}>
         <div className="px-8 py-4 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
             <img src="/logo.png" alt="CredSight" className="h-8 w-auto" />
