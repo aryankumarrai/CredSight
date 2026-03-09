@@ -28,9 +28,24 @@ export function AppLayout({ children }: { children: ReactNode }) {
                   href={item.url}
                   className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
-                      ? "bg-primary text-primary-foreground"
-                      : "text-foreground hover:bg-primary hover:text-primary-foreground"
+                      ? "text-primary-foreground"
+                      : "text-foreground hover:text-primary-foreground"
                   }`}
+                  style={
+                    isActive
+                      ? { backgroundColor: "var(--nav-hover)" }
+                      : {}
+                  }
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = "var(--nav-hover)";
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.backgroundColor = "";
+                    }
+                  }}
                   data-testid={`nav-link-${item.title.toLowerCase()}`}
                 >
                   <item.icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
