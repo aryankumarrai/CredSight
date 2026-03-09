@@ -14,27 +14,27 @@ export function AppLayout({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-col h-screen w-full bg-background overflow-hidden">
       <header className="border-b border-card-border" style={{ backgroundColor: "#181915" }}>
-        <div className="px-8 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <img src="/logo.png" alt="CredSight" className="h-8 w-auto" />
+        <div className="px-4 sm:px-6 md:px-8 py-3 sm:py-4 flex items-center justify-between gap-4">
+          <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+            <img src="/logo.png" alt="CredSight" className="h-10 sm:h-12 md:h-14 w-auto" />
           </Link>
           
-          <nav className="flex items-center gap-6">
+          <nav className="flex items-center gap-2 sm:gap-4 md:gap-6 overflow-x-auto">
             {navItems.map((item) => {
               const isActive = location === item.url;
               return (
                 <Link
                   key={item.title}
                   href={item.url}
-                  className={`flex items-center gap-2 px-3 py-2 rounded text-sm font-medium transition-colors ${
+                  className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-3 py-2 rounded text-xs sm:text-sm font-medium transition-colors whitespace-nowrap ${
                     isActive
                       ? "bg-primary text-primary-foreground"
                       : "text-foreground hover:bg-primary hover:text-primary-foreground"
                   }`}
                   data-testid={`nav-link-${item.title.toLowerCase()}`}
                 >
-                  <item.icon className="w-4 h-4" />
-                  <span>{item.title}</span>
+                  <item.icon className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+                  <span className="hidden sm:inline">{item.title}</span>
                 </Link>
               );
             })}
@@ -43,7 +43,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       </header>
       
       <main className="flex-1 overflow-y-auto">
-        <div className="p-8 w-full max-w-6xl mx-auto">
+        <div className="p-4 sm:p-6 md:p-8 w-full max-w-6xl mx-auto">
           {children}
         </div>
       </main>
