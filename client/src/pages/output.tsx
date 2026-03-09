@@ -81,38 +81,39 @@ export default function Output() {
   return (
     <AppLayout>
       <div className="space-y-8">
-        <div className="flex items-start justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
           <div>
             <Badge variant="outline" className="mb-3">Recommendation Engine</Badge>
-            <h1 className="text-3xl font-bold mb-2">Credit Appraisal Output</h1>
-            <p className="text-muted-foreground">Final ML-based recommendation with explainability.</p>
+            <h1 className="text-2xl sm:text-3xl font-bold mb-2">Credit Appraisal Output</h1>
+            <p className="text-sm sm:text-base text-muted-foreground">Final ML-based recommendation with explainability.</p>
           </div>
           <Button
             onClick={downloadPDF}
             variant="outline"
-            className="gap-2 mt-1"
+            className="gap-2 w-full sm:w-auto"
             data-testid="button-download-pdf"
           >
             <Download className="w-4 h-4" />
-            Download PDF
+            <span className="hidden sm:inline">Download PDF</span>
+            <span className="sm:hidden">PDF</span>
           </Button>
         </div>
 
         <Card className="card-simple border-red-500/30 bg-red-500/5">
-          <CardContent className="p-8 text-center">
+          <CardContent className="p-4 sm:p-8 text-center">
             <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-2">FINAL DECISION</p>
-              <h2 className="text-4xl font-bold mb-4">
-                RECOMMENDATION: <span className="text-red-500">REJECT</span>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-2">FINAL DECISION</p>
+              <h2 className="text-2xl sm:text-4xl font-bold mb-4">
+                <span className="block sm:inline">RECOMMENDATION:</span> <span className="text-red-500">REJECT</span>
               </h2>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8">
                 <div>
                   <p className="text-xs text-muted-foreground">Suggested Limit</p>
-                  <p className="text-xl font-bold text-muted-foreground line-through">₹5.00 Cr</p>
+                  <p className="text-lg sm:text-xl font-bold text-muted-foreground line-through">₹5.00 Cr</p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Interest Rate</p>
-                  <p className="text-xl font-bold text-muted-foreground">N/A</p>
+                  <p className="text-lg sm:text-xl font-bold text-muted-foreground">N/A</p>
                 </div>
               </div>
             </div>
@@ -121,16 +122,18 @@ export default function Output() {
 
         <Card className="card-simple">
           <CardHeader>
-            <CardTitle className="text-base">Overall Risk Assessment</CardTitle>
+            <CardTitle className="text-sm sm:text-base">Overall Risk Assessment</CardTitle>
           </CardHeader>
-          <CardContent className="flex justify-center py-8">
-            <RiskGauge score={72} label="Risk Score" data-testid="gauge-risk-score" />
+          <CardContent className="flex justify-center py-6 sm:py-8 px-4">
+            <div className="w-full max-w-xs">
+              <RiskGauge score={72} label="Risk Score" data-testid="gauge-risk-score" />
+            </div>
           </CardContent>
         </Card>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold mb-3">Five Cs Assessment</h3>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4">
+          <h3 className="text-base sm:text-lg font-semibold mb-3">Five Cs Assessment</h3>
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
             {csData.map((item) => (
               <Card key={item.name} className="card-simple hover-simple">
                 <CardContent className="p-4 flex flex-col items-center text-center">

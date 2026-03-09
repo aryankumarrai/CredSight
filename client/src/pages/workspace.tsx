@@ -21,12 +21,12 @@ export default function Workspace() {
     <AppLayout>
       <div className="space-y-6">
         <div>
-          <h1 className="text-3xl font-bold mb-2">Credit Manager Workspace</h1>
-          <p className="text-muted-foreground">AI-assisted credit officer workspace with live external intelligence.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold mb-2">Credit Manager Workspace</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">AI-assisted credit officer workspace with live external intelligence.</p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="md:col-span-1 lg:col-span-2 space-y-4 sm:space-y-6">
             <Card className="card-simple">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
@@ -65,7 +65,7 @@ export default function Workspace() {
             </Card>
           </div>
 
-          <div className="space-y-6">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="card-simple">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
