@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,27 +6,27 @@
 
 @layer base {
   :root {
-    --font-sans: 'Inter', sans-serif;
-    --background: 240 10% 8%;
-    --foreground: 0 0% 95%;
-    --card: 240 10% 12%;
-    --card-foreground: 0 0% 95%;
-    --card-border: 240 10% 20%;
-    --popover: 240 10% 12%;
-    --popover-foreground: 0 0% 95%;
-    --popover-border: 240 10% 20%;
-    --primary: 220 90% 56%;
-    --primary-foreground: 0 0% 100%;
-    --primary-border: 220 90% 46%;
-    --secondary: 240 10% 20%;
-    --secondary-foreground: 0 0% 95%;
-    --secondary-border: 240 10% 28%;
-    --muted: 240 10% 18%;
-    --muted-foreground: 240 5% 60%;
-    --muted-border: 240 10% 25%;
-    --accent: 30 100% 50%;
-    --accent-foreground: 0 0% 100%;
-    --accent-border: 30 100% 40%;
+    --font-sans: 'Outfit', sans-serif;
+    --background: 76 7% 9%;
+    --foreground: 30 31% 89%;
+    --card: 76 7% 16%;
+    --card-foreground: 30 31% 89%;
+    --card-border: 76 7% 25%;
+    --popover: 76 7% 16%;
+    --popover-foreground: 30 31% 89%;
+    --popover-border: 76 7% 25%;
+    --primary: 94 13% 41%;
+    --primary-foreground: 76 7% 9%;
+    --primary-border: 94 13% 35%;
+    --secondary: 60 30% 9%;
+    --secondary-foreground: 30 31% 89%;
+    --secondary-border: 76 7% 25%;
+    --muted: 60 10% 27%;
+    --muted-foreground: 30 15% 65%;
+    --muted-border: 76 7% 25%;
+    --accent: 94 13% 41%;
+    --accent-foreground: 76 7% 9%;
+    --accent-border: 94 13% 35%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 98%;
     --destructive-border: 0 84% 50%;
@@ -34,19 +34,19 @@
     --warning-foreground: 0 0% 98%;
     --success: 142 71% 45%;
     --success-foreground: 0 0% 98%;
-    --border: 240 10% 20%;
-    --input: 240 10% 20%;
-    --ring: 220 90% 56%;
-    --sidebar: 240 10% 7%;
-    --sidebar-foreground: 240 5% 70%;
-    --sidebar-border: 240 10% 18%;
-    --sidebar-primary: 220 90% 56%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 10% 18%;
-    --sidebar-accent-foreground: 240 5% 98%;
-    --sidebar-ring: 220 90% 56%;
+    --border: 76 7% 25%;
+    --input: 76 7% 25%;
+    --ring: 94 13% 41%;
+    --sidebar: 60 30% 9%;
+    --sidebar-foreground: 30 31% 89%;
+    --sidebar-border: 76 7% 25%;
+    --sidebar-primary: 94 13% 41%;
+    --sidebar-primary-foreground: 76 7% 9%;
+    --sidebar-accent: 76 7% 25%;
+    --sidebar-accent-foreground: 30 31% 89%;
+    --sidebar-ring: 94 13% 41%;
     --radius: 0.5rem;
-    --chart-1: 220 90% 56%;
+    --chart-1: 94 13% 41%;
     --chart-2: 30 100% 50%;
     --chart-3: 142 71% 45%;
     --chart-4: 35 100% 52%;
@@ -76,7 +76,7 @@
   }
   
   .hover-simple {
-    @apply transition-all duration-200 hover:scale-105 hover:bg-card-foreground/5;
+    @apply transition-colors duration-200 hover:bg-primary hover:text-primary-foreground;
   }
   
   .hover-dim {
