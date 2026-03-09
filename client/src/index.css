@@ -10,7 +10,7 @@
     --background: 76 7% 9%;
     --foreground: 30 31% 89%;
     --card: 76 7% 16%;
-    --card-foreground: 30 31% 89%;
+    --card-foreground: #255F38;
     --card-border: 76 7% 25%;
     --popover: 76 7% 16%;
     --popover-foreground: 30 31% 89%;
@@ -51,7 +51,7 @@
     --chart-3: 142 71% 45%;
     --chart-4: 35 100% 52%;
     --chart-5: 0 84% 60%;
-    --nav-hover: #27391C;
+    --nav-hover: #255F38;
   }
 }
 
