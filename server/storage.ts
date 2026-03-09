@@ -1,38 +1,36 @@
-import { type User, type InsertUser } from "@shared/schema";
-import { randomUUID } from "crypto";
-
-// modify the interface with any CRUD methods
-// you might need
+import { db } from "./db";
+import { creditAssessments, type InsertCreditAssessment, type CreditAssessment } from "@shared/schema";
+import { eq } from "drizzle-orm";
 
 export interface IStorage {
-  getUser(id: string): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
+  getAssessments(): Promise<CreditAssessment[]>;
+  getAssessment(id: number): Promise<CreditAssessment | undefined>;
+  createAssessment(assessment: InsertCreditAssessment): Promise<CreditAssessment>;
+  updateAssessment(id: number, updates: Partial<InsertCreditAssessment>): Promise<CreditAssessment | undefined>;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<string, User>;
-
-  constructor() {
-    this.users = new Map();
+export class DatabaseStorage implements IStorage {
+  async getAssessments(): Promise<CreditAssessment[]> {
+    return await db.select().from(creditAssessments);
   }
 
-  async getUser(id: string): Promise<User | undefined> {
-    return this.users.get(id);
+  async getAssessment(id: number): Promise<CreditAssessment | undefined> {
+    const [assessment] = await db.select().from(creditAssessments).where(eq(creditAssessments.id, id));
+    return assessment;
   }
 
-  async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+  async createAssessment(assessment: InsertCreditAssessment): Promise<CreditAssessment> {
+    const [created] = await db.insert(creditAssessments).values(assessment).returning();
+    return created;
   }
 
-  async createUser(insertUser: InsertUser): Promise<User> {
-    const id = randomUUID();
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
-    return user;
+  async updateAssessment(id: number, updates: Partial<InsertCreditAssessment>): Promise<CreditAssessment | undefined> {
+    const [updated] = await db.update(creditAssessments)
+      .set(updates)
+      .where(eq(creditAssessments.id, id))
+      .returning();
+    return updated;
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
