@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File, Users, Eye, ThumbsDown } from "lucide-react";
+import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File, Users, Eye, ThumbsDown, Settings, ArrowRight } from "lucide-react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 
 interface UploadedFile {
   docType: string;
@@ -28,6 +29,11 @@ interface DocumentReview {
   status: "pending" | "reviewed" | "classified";
 }
 
+interface SchemaMapping {
+  raw: string;
+  mapped: string;
+}
+
 export default function Ingestion() {
   const [isRedacting, setIsRedacting] = useState(true);
   const [selectedDocType, setSelectedDocType] = useState("");
@@ -36,6 +42,10 @@ export default function Ingestion() {
   const [enableHumanReview, setEnableHumanReview] = useState(true);
   const [reviewedDocs, setReviewedDocs] = useState<Set<number>>(new Set());
   const [deniedDocs, setDeniedDocs] = useState<Set<number>>(new Set());
+  const [schemaMappings, setSchemaMappings] = useState<SchemaMapping[]>([
+    { raw: "Raw_Profit_2023", mapped: "EBITDA_Current_Year" },
+    { raw: "Raw_Revenue_2023", mapped: "Revenue_Current_Year" },
+  ]);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedDocumentTypes = [
@@ -170,11 +180,55 @@ export default function Ingestion() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <Card className="md:col-span-1 lg:col-span-2 card-simple">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <UploadCloud className="w-4 h-4" /> Document Upload
-              </CardTitle>
-              <CardDescription>Add required documents (up to 5)</CardDescription>
+            <CardHeader className="flex flex-row items-start justify-between">
+              <div className="flex-1">
+                <CardTitle className="flex items-center gap-2">
+                  <UploadCloud className="w-4 h-4" /> Document Upload
+                </CardTitle>
+                <CardDescription>Add required documents (up to 5)</CardDescription>
+              </div>
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="outline" size="sm" className="gap-2">
+                    <Settings className="w-4 h-4" />
+                    <span className="hidden sm:inline">Configure Schema</span>
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="max-w-2xl">
+                  <DialogHeader>
+                    <DialogTitle className="flex items-center gap-2">
+                      <Settings className="w-5 h-5" /> Dynamic Schema Mapping
+                    </DialogTitle>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <p className="text-sm text-muted-foreground">Map raw AI extracted data to your bank's standard schema:</p>
+                    <div className="space-y-3 max-h-[400px] overflow-y-auto">
+                      {schemaMappings.map((mapping, i) => (
+                        <div key={i} className="flex items-center gap-3 p-3 rounded border border-card-border">
+                          <div className="flex-1">
+                            <p className="text-sm font-mono text-muted-foreground">{mapping.raw}</p>
+                          </div>
+                          <ArrowRight className="w-4 h-4 text-primary" />
+                          <div className="flex-1">
+                            <Select defaultValue={mapping.mapped}>
+                              <SelectTrigger className="text-sm">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="EBITDA_Current_Year">EBITDA_Current_Year</SelectItem>
+                                <SelectItem value="Revenue_Current_Year">Revenue_Current_Year</SelectItem>
+                                <SelectItem value="Net_Profit">Net_Profit</SelectItem>
+                                <SelectItem value="Total_Assets">Total_Assets</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                    <Button className="w-full">Save Schema Configuration</Button>
+                  </div>
+                </DialogContent>
+              </Dialog>
             </CardHeader>
             <CardContent className="space-y-4">
               {/* Document Type Selector */}
@@ -287,8 +341,11 @@ export default function Ingestion() {
                           }`} />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium truncate">{file.fileName}</p>
-                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground flex-wrap">
                               <span>{file.docType} • {formatFileSize(file.fileSize)}</span>
+                              <Badge variant="secondary" className="text-xs h-fit bg-primary/10 text-primary border-primary/30">
+                                Detected: {file.docType.split("(")[0].trim()}
+                              </Badge>
                               {deniedDocs.has(index) && (
                                 <Badge variant="destructive" className="text-xs h-fit">Denied</Badge>
                               )}

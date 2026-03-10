@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download } from "lucide-react";
+import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download, TrendingUp, AlertTriangle, Zap, Target } from "lucide-react";
 import { RiskGauge } from "@/components/risk-gauge";
 
 export default function Output() {
@@ -70,12 +70,51 @@ export default function Output() {
     }
   };
 
-  const csData = [
-    { name: "Character", icon: ShieldAlert, score: "Low", color: "text-red-500" },
-    { name: "Capacity", icon: Briefcase, score: "Moderate", color: "text-amber-500" },
-    { name: "Capital", icon: Wallet, score: "Strong", color: "text-emerald-500" },
-    { name: "Collateral", icon: Building, score: "Strong", color: "text-emerald-500" },
-    { name: "Conditions", icon: FileSignature, score: "Poor", color: "text-red-500" },
+  const swotData = [
+    { 
+      category: "Strengths", 
+      icon: TrendingUp, 
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/30",
+      items: [
+        "Strong borrowing profile and consistent portfolio performance",
+        "Healthy equity retention and YoY profit margins"
+      ]
+    },
+    { 
+      category: "Weaknesses", 
+      icon: AlertTriangle, 
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/30",
+      items: [
+        "High asset-liability mismatch in the short term (ALM data)",
+        "Factory operating at 40% capacity during site visit"
+      ]
+    },
+    { 
+      category: "Opportunities", 
+      icon: Target, 
+      color: "text-blue-500",
+      bgColor: "bg-blue-500/10",
+      borderColor: "border-blue-500/30",
+      items: [
+        "Favorable macro trends in the entity's sector",
+        "New RBI initiatives supporting manufacturing growth"
+      ]
+    },
+    { 
+      category: "Threats", 
+      icon: Zap, 
+      color: "text-amber-500",
+      bgColor: "bg-amber-500/10",
+      borderColor: "border-amber-500/30",
+      items: [
+        "Pending legal disputes found via secondary research",
+        "Regulatory headwinds in sector operations"
+      ]
+    },
   ];
 
   return (
@@ -94,8 +133,8 @@ export default function Output() {
             data-testid="button-download-pdf"
           >
             <Download className="w-4 h-4" />
-            <span className="hidden sm:inline">Download PDF</span>
-            <span className="sm:hidden">PDF</span>
+            <span className="hidden sm:inline">Download Assessment Report</span>
+            <span className="sm:hidden">Report</span>
           </Button>
         </div>
 
@@ -132,14 +171,25 @@ export default function Output() {
         </Card>
 
         <div className="space-y-4">
-          <h3 className="text-base sm:text-lg font-semibold mb-3">Five Cs Assessment</h3>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-4">
-            {csData.map((item) => (
-              <Card key={item.name} className="card-simple hover-simple">
-                <CardContent className="p-4 flex flex-col items-center text-center">
-                  <item.icon className={`w-5 h-5 mb-2 ${item.color}`} />
-                  <h4 className="font-bold text-sm mb-1">{item.name}</h4>
-                  <Badge variant="outline" className="text-xs">{item.score}</Badge>
+          <h3 className="text-base sm:text-lg font-semibold mb-3">SWOT Analysis</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {swotData.map((swot) => (
+              <Card key={swot.category} className={`card-simple border ${swot.borderColor} ${swot.bgColor}`}>
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <swot.icon className={`w-5 h-5 ${swot.color}`} />
+                    {swot.category}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2 text-xs sm:text-sm">
+                    {swot.items.map((item, i) => (
+                      <li key={i} className="flex gap-2">
+                        <span className="text-primary font-bold mt-0.5">•</span>
+                        <span>{item}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </CardContent>
               </Card>
             ))}

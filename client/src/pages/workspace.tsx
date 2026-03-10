@@ -3,8 +3,9 @@ import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { Badge } from "@/components/ui/badge";
-import { Globe, Scale, TrendingUp, AlertTriangle, MessageSquare } from "lucide-react";
+import { Globe, Scale, TrendingUp, AlertTriangle, MessageSquare, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function Workspace() {
   const [observation, setObservation] = useState("Factory found operating at 40% capacity");
@@ -14,6 +15,7 @@ export default function Workspace() {
   const feedItems = [
     { source: "News", title: "New RBI regulations impacting sector", tag: "Sector Risk", color: "text-amber-500" },
     { source: "e-Courts", title: "Vendor dispute filed at District Court, Pune", tag: "Legal Risk", color: "text-red-500" },
+    { source: "Market Sentiment", title: "Positive sentiment for manufacturing sector amid recovery", tag: "Market Signal", color: "text-emerald-500" },
     { source: "Promoter", title: "Cross-holding analysis clear", tag: "Clean", color: "text-emerald-500" },
   ];
 
@@ -24,6 +26,14 @@ export default function Workspace() {
           <h1 className="text-2xl sm:text-3xl font-bold mb-2">Credit Manager Workspace</h1>
           <p className="text-sm sm:text-base text-muted-foreground">AI-assisted credit officer workspace with live external intelligence.</p>
         </div>
+
+        <Alert className="border-blue-500/50 bg-blue-500/10">
+          <Zap className="h-4 w-4 text-blue-600" />
+          <AlertTitle className="text-blue-600">AI Triangulation Active</AlertTitle>
+          <AlertDescription className="text-xs">
+            Cross-referencing Primary Officer Observations with Secondary Market Sentiment and External Intelligence Feeds
+          </AlertDescription>
+        </Alert>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           <div className="md:col-span-1 lg:col-span-2 space-y-4 sm:space-y-6">
