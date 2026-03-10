@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File } from "lucide-react";
+import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File, Users, Eye } from "lucide-react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -19,6 +19,13 @@ interface UploadedFile {
   fileName: string;
   fileSize: number;
   uploadedAt: Date;
+  reviewedByHuman?: boolean;
+}
+
+interface DocumentReview {
+  fileName: string;
+  docType: string;
+  status: "pending" | "reviewed" | "classified";
 }
 
 export default function Ingestion() {
@@ -26,6 +33,8 @@ export default function Ingestion() {
   const [selectedDocType, setSelectedDocType] = useState("");
   const [uploadedDocs, setUploadedDocs] = useState<UploadedFile[]>([]);
   const [isDragActive, setIsDragActive] = useState(false);
+  const [enableHumanReview, setEnableHumanReview] = useState(true);
+  const [reviewedDocs, setReviewedDocs] = useState<Set<number>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedDocumentTypes = [
@@ -93,6 +102,23 @@ export default function Ingestion() {
 
   const handleRemoveFile = (index: number) => {
     setUploadedDocs(uploadedDocs.filter((_, i) => i !== index));
+    setReviewedDocs(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
+  };
+
+  const handleMarkReviewed = (index: number) => {
+    setReviewedDocs(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
   };
 
   const formatFileSize = (bytes: number) => {
@@ -105,6 +131,7 @@ export default function Ingestion() {
 
   const uniqueDocTypes = new Set(uploadedDocs.map(d => d.docType));
   const remainingSlots = 5 - uniqueDocTypes.size;
+  const pendingReviewCount = uploadedDocs.length - reviewedDocs.size;
 
   return (
     <AppLayout>
@@ -194,27 +221,56 @@ export default function Ingestion() {
               {/* Uploaded Files */}
               {uploadedDocs.length > 0 && (
                 <div className="space-y-3 pt-2">
-                  <h4 className="text-sm font-semibold">Uploaded Files ({uploadedDocs.length})</h4>
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-semibold">Uploaded Files ({uploadedDocs.length})</h4>
+                    {enableHumanReview && pendingReviewCount > 0 && (
+                      <Badge variant="secondary" className="text-xs">
+                        {pendingReviewCount} pending review
+                      </Badge>
+                    )}
+                  </div>
                   <div className="space-y-2 max-h-96 overflow-y-auto">
                     {uploadedDocs.map((file, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-3 rounded border border-green-500/30 bg-green-500/5"
+                        className={`flex items-center justify-between p-3 rounded border transition-colors ${
+                          reviewedDocs.has(index)
+                            ? "border-blue-500/30 bg-blue-500/5"
+                            : "border-green-500/30 bg-green-500/5"
+                        }`}
                       >
                         <div className="flex items-center gap-2 min-w-0 flex-1">
-                          <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                          <CheckCircle2 className={`w-4 h-4 flex-shrink-0 ${
+                            reviewedDocs.has(index) ? "text-blue-600" : "text-green-600"
+                          }`} />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium truncate">{file.fileName}</p>
                             <p className="text-xs text-muted-foreground">{file.docType} • {formatFileSize(file.fileSize)}</p>
                           </div>
                         </div>
-                        <button
-                          onClick={() => handleRemoveFile(index)}
-                          className="ml-2 p-1 text-muted-foreground hover:text-destructive flex-shrink-0"
-                          data-testid={`button-remove-file-${index}`}
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
+                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                          {enableHumanReview && (
+                            <button
+                              onClick={() => handleMarkReviewed(index)}
+                              className={`p-1 rounded transition-colors ${
+                                reviewedDocs.has(index)
+                                  ? "text-blue-600 bg-blue-500/10"
+                                  : "text-muted-foreground hover:text-blue-600"
+                              }`}
+                              title={reviewedDocs.has(index) ? "Mark as unreviewed" : "Mark as reviewed"}
+                              data-testid={`button-review-file-${index}`}
+                            >
+                              <Eye className="w-4 h-4" />
+                            </button>
+                          )}
+                          <button
+                            onClick={() => handleRemoveFile(index)}
+                            className="p-1 text-muted-foreground hover:text-destructive"
+                            data-testid={`button-remove-file-${index}`}
+                          >
+                            <X className="w-4 h-4" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -234,6 +290,57 @@ export default function Ingestion() {
           </Card>
 
           <div className="space-y-6">
+            <Card className="card-simple">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Users className="w-4 h-4" /> Human-in-the-Loop
+                </CardTitle>
+                <CardDescription className="text-xs">Review & classify documents</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-center justify-between mb-2 p-3 rounded bg-card border border-card-border">
+                  <div>
+                    <p className="font-semibold text-sm">Enable Review</p>
+                    <p className="text-xs text-muted-foreground">Manual classification</p>
+                  </div>
+                  <Switch checked={enableHumanReview} onCheckedChange={setEnableHumanReview} data-testid="toggle-human-review" />
+                </div>
+
+                {enableHumanReview && (
+                  <div className="rounded border border-blue-500/30 bg-blue-500/5 p-3 space-y-2">
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Total Uploaded:</span>
+                      <span className="font-semibold">{uploadedDocs.length}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Reviewed:</span>
+                      <span className="font-semibold text-blue-600">{reviewedDocs.size}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Pending Review:</span>
+                      <span className="font-semibold text-orange-600">{pendingReviewCount}</span>
+                    </div>
+                    {pendingReviewCount === 0 && uploadedDocs.length > 0 && (
+                      <div className="text-xs text-blue-600 font-medium pt-2 border-t border-blue-500/20">
+                        ✓ All documents reviewed
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                <Alert className={`text-xs ${enableHumanReview ? "border-blue-500/50 bg-blue-500/10" : "border-gray-500/50 bg-gray-500/10"}`}>
+                  <AlertTitle className={`text-sm font-semibold mb-1 ${enableHumanReview ? "text-blue-600" : "text-muted-foreground"}`}>
+                    {enableHumanReview ? "Review Active" : "Review Disabled"}
+                  </AlertTitle>
+                  <AlertDescription>
+                    {enableHumanReview
+                      ? "Click the eye icon on each file to mark it as reviewed and classified."
+                      : "Enable human-in-the-loop review to manually classify uploaded documents."}
+                  </AlertDescription>
+                </Alert>
+              </CardContent>
+            </Card>
+
             <Card className="card-simple">
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-base">
