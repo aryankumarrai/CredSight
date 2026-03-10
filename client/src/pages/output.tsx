@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download, TrendingUp, AlertTriangle, Zap, Target } from "lucide-react";
+import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download, TrendingUp, AlertTriangle, Zap, Target, AlertCircle } from "lucide-react";
 import { RiskGauge } from "@/components/risk-gauge";
 
 export default function Output() {
@@ -69,6 +69,49 @@ export default function Output() {
       printWindow.print();
     }
   };
+
+  const fiveCsData = [
+    {
+      name: "Character",
+      rating: "Low",
+      icon: ShieldAlert,
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/30"
+    },
+    {
+      name: "Capacity",
+      rating: "Moderate",
+      icon: Building,
+      color: "text-orange-500",
+      bgColor: "bg-orange-500/10",
+      borderColor: "border-orange-500/30"
+    },
+    {
+      name: "Capital",
+      rating: "Strong",
+      icon: Wallet,
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/30"
+    },
+    {
+      name: "Collateral",
+      rating: "Strong",
+      icon: FileSignature,
+      color: "text-emerald-500",
+      bgColor: "bg-emerald-500/10",
+      borderColor: "border-emerald-500/30"
+    },
+    {
+      name: "Conditions",
+      rating: "Poor",
+      icon: AlertCircle,
+      color: "text-red-500",
+      bgColor: "bg-red-500/10",
+      borderColor: "border-red-500/30"
+    }
+  ];
 
   const swotData = [
     { 
@@ -169,6 +212,19 @@ export default function Output() {
             </div>
           </CardContent>
         </Card>
+
+        <div className="space-y-4">
+          <h3 className="text-base sm:text-lg font-semibold mb-3">Five Cs Assessment</h3>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 sm:gap-4">
+            {fiveCsData.map((item) => (
+              <Card key={item.name} className={`card-simple border ${item.borderColor} ${item.bgColor} flex flex-col items-center text-center p-4 sm:p-6`}>
+                <item.icon className={`w-8 h-8 sm:w-10 sm:h-10 ${item.color} mb-3`} />
+                <CardTitle className="text-sm mb-3">{item.name}</CardTitle>
+                <Badge variant="outline" className="mt-auto">{item.rating}</Badge>
+              </Card>
+            ))}
+          </div>
+        </div>
 
         <div className="space-y-4">
           <h3 className="text-base sm:text-lg font-semibold mb-3">SWOT Analysis</h3>
