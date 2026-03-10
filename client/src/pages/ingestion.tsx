@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File, Users, Eye } from "lucide-react";
+import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File, Users, Eye, ThumbsDown } from "lucide-react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +35,7 @@ export default function Ingestion() {
   const [isDragActive, setIsDragActive] = useState(false);
   const [enableHumanReview, setEnableHumanReview] = useState(true);
   const [reviewedDocs, setReviewedDocs] = useState<Set<number>>(new Set());
+  const [deniedDocs, setDeniedDocs] = useState<Set<number>>(new Set());
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedDocumentTypes = [
@@ -119,6 +120,30 @@ export default function Ingestion() {
       }
       return newSet;
     });
+    // Remove from denied when approved
+    setDeniedDocs(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
+  };
+
+  const handleDenyDocument = (index: number) => {
+    setDeniedDocs(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(index)) {
+        newSet.delete(index);
+      } else {
+        newSet.add(index);
+      }
+      return newSet;
+    });
+    // Remove from reviewed when denied
+    setReviewedDocs(prev => {
+      const newSet = new Set(prev);
+      newSet.delete(index);
+      return newSet;
+    });
   };
 
   const formatFileSize = (bytes: number) => {
@@ -131,7 +156,9 @@ export default function Ingestion() {
 
   const uniqueDocTypes = new Set(uploadedDocs.map(d => d.docType));
   const remainingSlots = 5 - uniqueDocTypes.size;
-  const pendingReviewCount = uploadedDocs.length - reviewedDocs.size;
+  const pendingReviewCount = uploadedDocs.length - reviewedDocs.size - deniedDocs.size;
+  const approvedCount = reviewedDocs.size;
+  const deniedCount = deniedDocs.size;
 
   return (
     <AppLayout>
@@ -223,10 +250,19 @@ export default function Ingestion() {
                 <div className="space-y-3 pt-2">
                   <div className="flex items-center justify-between">
                     <h4 className="text-sm font-semibold">Uploaded Files ({uploadedDocs.length})</h4>
-                    {enableHumanReview && pendingReviewCount > 0 && (
-                      <Badge variant="secondary" className="text-xs">
-                        {pendingReviewCount} pending review
-                      </Badge>
+                    {enableHumanReview && (pendingReviewCount > 0 || deniedCount > 0) && (
+                      <div className="flex gap-2">
+                        {deniedCount > 0 && (
+                          <Badge variant="destructive" className="text-xs">
+                            {deniedCount} denied
+                          </Badge>
+                        )}
+                        {pendingReviewCount > 0 && (
+                          <Badge variant="secondary" className="text-xs">
+                            {pendingReviewCount} pending
+                          </Badge>
+                        )}
+                      </div>
                     )}
                   </div>
                   <div className="space-y-2 max-h-96 overflow-y-auto">
@@ -234,34 +270,62 @@ export default function Ingestion() {
                       <div
                         key={index}
                         className={`flex items-center justify-between p-3 rounded border transition-colors ${
-                          reviewedDocs.has(index)
+                          deniedDocs.has(index)
+                            ? "border-red-500/30 bg-red-500/5"
+                            : reviewedDocs.has(index)
                             ? "border-blue-500/30 bg-blue-500/5"
                             : "border-green-500/30 bg-green-500/5"
                         }`}
                       >
                         <div className="flex items-center gap-2 min-w-0 flex-1">
                           <CheckCircle2 className={`w-4 h-4 flex-shrink-0 ${
-                            reviewedDocs.has(index) ? "text-blue-600" : "text-green-600"
+                            deniedDocs.has(index) 
+                              ? "text-red-600" 
+                              : reviewedDocs.has(index) 
+                              ? "text-blue-600" 
+                              : "text-green-600"
                           }`} />
                           <div className="min-w-0 flex-1">
                             <p className="text-sm font-medium truncate">{file.fileName}</p>
-                            <p className="text-xs text-muted-foreground">{file.docType} • {formatFileSize(file.fileSize)}</p>
+                            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                              <span>{file.docType} • {formatFileSize(file.fileSize)}</span>
+                              {deniedDocs.has(index) && (
+                                <Badge variant="destructive" className="text-xs h-fit">Denied</Badge>
+                              )}
+                              {reviewedDocs.has(index) && (
+                                <Badge variant="default" className="text-xs h-fit">Approved</Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="flex items-center gap-2 flex-shrink-0 ml-2">
+                        <div className="flex items-center gap-1 flex-shrink-0 ml-2">
                           {enableHumanReview && (
-                            <button
-                              onClick={() => handleMarkReviewed(index)}
-                              className={`p-1 rounded transition-colors ${
-                                reviewedDocs.has(index)
-                                  ? "text-blue-600 bg-blue-500/10"
-                                  : "text-muted-foreground hover:text-blue-600"
-                              }`}
-                              title={reviewedDocs.has(index) ? "Mark as unreviewed" : "Mark as reviewed"}
-                              data-testid={`button-review-file-${index}`}
-                            >
-                              <Eye className="w-4 h-4" />
-                            </button>
+                            <>
+                              <button
+                                onClick={() => handleMarkReviewed(index)}
+                                className={`p-1 rounded transition-colors ${
+                                  reviewedDocs.has(index)
+                                    ? "text-blue-600 bg-blue-500/10"
+                                    : "text-muted-foreground hover:text-blue-600"
+                                }`}
+                                title={reviewedDocs.has(index) ? "Mark as unapproved" : "Approve document"}
+                                data-testid={`button-approve-file-${index}`}
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDenyDocument(index)}
+                                className={`p-1 rounded transition-colors ${
+                                  deniedDocs.has(index)
+                                    ? "text-red-600 bg-red-500/10"
+                                    : "text-muted-foreground hover:text-red-600"
+                                }`}
+                                title={deniedDocs.has(index) ? "Mark as undecided" : "Deny document"}
+                                data-testid={`button-deny-file-${index}`}
+                              >
+                                <ThumbsDown className="w-4 h-4" />
+                              </button>
+                            </>
                           )}
                           <button
                             onClick={() => handleRemoveFile(index)}
@@ -313,8 +377,12 @@ export default function Ingestion() {
                       <span className="font-semibold">{uploadedDocs.length}</span>
                     </div>
                     <div className="flex justify-between text-sm">
-                      <span className="text-muted-foreground">Reviewed:</span>
-                      <span className="font-semibold text-blue-600">{reviewedDocs.size}</span>
+                      <span className="text-muted-foreground">Approved:</span>
+                      <span className="font-semibold text-blue-600">{approvedCount}</span>
+                    </div>
+                    <div className="flex justify-between text-sm">
+                      <span className="text-muted-foreground">Denied:</span>
+                      <span className="font-semibold text-red-600">{deniedCount}</span>
                     </div>
                     <div className="flex justify-between text-sm">
                       <span className="text-muted-foreground">Pending Review:</span>

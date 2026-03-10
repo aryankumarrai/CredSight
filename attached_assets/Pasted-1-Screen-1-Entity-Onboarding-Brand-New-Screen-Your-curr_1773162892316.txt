@@ -1,0 +1,114 @@
+1. Screen 1: "Entity Onboarding" (Brand New Screen)
+
+Your current flow jumps straight into the dashboard. You must add a “Step 1” onboarding screen to capture the user's journey from the very beginning.
+
+The Layout:
+Create a clean, modern split-pane layout or a multi-step form (Stepper: Step 1 of 4).
+
+Section A – Entity Details
+Add input fields for:
+• CIN (Corporate Identification Number)
+• PAN
+• Sector (Dropdown: Manufacturing, IT, Pharma, etc.)
+• Turnover (₹ in Crores)
+
+Section B – Loan Details
+Add fields for:
+• Loan Type (Term Loan, Working Capital)
+• Requested Amount
+• Tenure (Months/Years)
+• Expected Interest Rate
+
+Why this stands out:
+The brief explicitly requests a “seamless onboarding page” for these exact data points. Adding this proves you read the new requirements closely and understand the complete UX flow.
+
+2. Screen 2: "Intelligent Data Ingestion & Classification" (Update Slide 11)
+
+You need to overhaul your “Ingestion” page to show the new document types and the Human-in-the-Loop feature.
+
+Update the Document Names:
+Remove the old GST/ITR labels. Your drag-and-drop zone must explicitly show the 5 new required documents:
+
+• ALM (Asset-Liability Management)
+• Shareholding Pattern
+• Borrowing Profile
+• Annual Reports
+• Portfolio Cuts / Performance Data
+
+The "Human-in-the-Loop" Feature (CRITICAL):
+Do not just show “Done” next to uploaded files. Instead show an Auto-Classification Label with approval buttons.
+
+Example UI:
+File uploaded → AI tags it as [Detected: Shareholding Pattern]
+
+Next to this show:
+• Green "Approve" (✓) button
+• Grey "Edit/Deny" (✎) dropdown
+
+Why this stands out:
+The judges explicitly asked for “users to approve, deny, or edit the auto-classification”. This UI widget directly answers that requirement.
+
+3. Screen 3: "Dynamic Schema Mapping" (New Modal / Tab)
+
+The brief asks for a way to let users “define or configure the output schema.” This is the core technical challenge.
+
+The Interface:
+Add a prominent button on the ingestion screen:
+
+⚙️ Configure Extraction Schema
+
+What it looks like (when clicked):
+Open a modal or slide-over panel showing a visual mapping tool.
+
+Left Side – Raw AI Extracted Data
+• Raw_Profit_2023
+• Raw_Revenue_2023
+
+Right Side – Bank's Standard Schema (Dropdown Mapping)
+• Raw_Profit_2023 → EBITDA_Current_Year
+• Raw_Revenue_2023 → Revenue_Current_Year
+
+Why this stands out:
+Most teams will ignore this because it sounds complex. Showing a Schema Configurator UI mockup proves you have thought through enterprise-level data architecture.
+
+4. Screen 4: "Pre-Cognitive Workspace" (Update Slide 12)
+
+Your current workspace is already strong, but we need to tweak the language to match the new brief.
+
+Market Sentiment & Triangulation:
+In your External Feed, alongside News and e-Courts, explicitly add:
+
+• Market Sentiment
+
+Visual Cue:
+Add a small AI notification banner that says:
+
+"AI Triangulation Active: Cross-referencing Primary Officer Observations with Secondary Market Sentiment."
+
+This directly uses the terminology required in the brief.
+
+5. Screen 5: "SWOT & Final Output" (Update Slides 13 & 14)
+
+The prompt changed the final report requirement. You must shift focus from the Five Cs framework to a SWOT Analysis.
+
+The SWOT Grid (2×2 Layout)
+
+Strengths
+• Strong borrowing profile and consistent portfolio performance.
+
+Weaknesses
+• High asset-liability mismatch in the short term (ALM data).
+
+Opportunities
+• Favorable macro trends in the entity’s sector.
+
+Threats
+• Pending legal disputes found via secondary research.
+
+Explainable Prediction:
+Keep your Reasoning Engine heavily prominent. It should clearly explain why the application was approved or rejected.
+
+Download Button:
+Rename the button from “Download PDF” to:
+
+Download Investment / Assessment Report
