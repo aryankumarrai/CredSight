@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle } from "lucide-react";
+import { useState, useRef } from "react";
+import { UploadCloud, FileText, CheckCircle2, ShieldAlert, Lock, AlertCircle, X, File } from "lucide-react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -14,10 +14,19 @@ import {
 } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 
+interface UploadedFile {
+  docType: string;
+  fileName: string;
+  fileSize: number;
+  uploadedAt: Date;
+}
+
 export default function Ingestion() {
   const [isRedacting, setIsRedacting] = useState(true);
   const [selectedDocType, setSelectedDocType] = useState("");
-  const [uploadedDocs, setUploadedDocs] = useState<string[]>([]);
+  const [uploadedDocs, setUploadedDocs] = useState<UploadedFile[]>([]);
+  const [isDragActive, setIsDragActive] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const allowedDocumentTypes = [
     "ALM (Asset-Liability Management)",
@@ -27,25 +36,75 @@ export default function Ingestion() {
     "Portfolio Cuts/Performance Data",
   ];
 
-  const files = [
-    { name: "GST Filings", type: "processed" },
-    { name: "ITR 2022-23", type: "processed" },
-    { name: "Bank Statements", type: "processed" },
-    { name: "Annual Report", type: "vlm-processing" },
-  ];
-
   const handleAddDocument = () => {
-    if (selectedDocType && uploadedDocs.length < 5 && !uploadedDocs.includes(selectedDocType)) {
-      setUploadedDocs([...uploadedDocs, selectedDocType]);
-      setSelectedDocType("");
+    if (selectedDocType && uploadedDocs.filter(d => d.docType === selectedDocType).length === 0) {
+      fileInputRef.current?.click();
     }
   };
 
-  const handleRemoveDocument = (docType: string) => {
-    setUploadedDocs(uploadedDocs.filter(doc => doc !== docType));
+  const handleFileSelect = (files: FileList | null) => {
+    if (!files || !selectedDocType) return;
+
+    Array.from(files).forEach((file) => {
+      const newDoc: UploadedFile = {
+        docType: selectedDocType,
+        fileName: file.name,
+        fileSize: file.size,
+        uploadedAt: new Date(),
+      };
+      setUploadedDocs([...uploadedDocs, newDoc]);
+    });
+    setSelectedDocType("");
   };
 
-  const remainingSlots = 5 - uploadedDocs.length;
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    handleFileSelect(e.target.files);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  const handleDragEnter = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDragActive(false);
+    
+    if (selectedDocType && e.dataTransfer.files) {
+      handleFileSelect(e.dataTransfer.files);
+    }
+  };
+
+  const handleRemoveFile = (index: number) => {
+    setUploadedDocs(uploadedDocs.filter((_, i) => i !== index));
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return "0 Bytes";
+    const k = 1024;
+    const sizes = ["Bytes", "KB", "MB", "GB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return Math.round(bytes / Math.pow(k, i) * 100) / 100 + " " + sizes[i];
+  };
+
+  const uniqueDocTypes = new Set(uploadedDocs.map(d => d.docType));
+  const remainingSlots = 5 - uniqueDocTypes.size;
 
   return (
     <AppLayout>
@@ -94,45 +153,80 @@ export default function Ingestion() {
                 </div>
               </div>
 
+              {/* Drag & Drop Upload Area */}
+              {selectedDocType && (
+                <div
+                  onDragEnter={handleDragEnter}
+                  onDragLeave={handleDragLeave}
+                  onDragOver={handleDragOver}
+                  onDrop={handleDrop}
+                  className={`border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer transition-all ${
+                    isDragActive
+                      ? "border-primary bg-primary/10"
+                      : "border-card-border hover:border-primary"
+                  }`}
+                  onClick={() => fileInputRef.current?.click()}
+                  data-testid="drop-zone"
+                >
+                  <UploadCloud className="w-10 h-10 mx-auto mb-3 text-muted-foreground" />
+                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Drag files here or click to upload</h4>
+                  <p className="text-xs sm:text-sm text-muted-foreground">PDF, DOC, DOCX, XLSX</p>
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    onChange={handleInputChange}
+                    className="hidden"
+                    data-testid="file-input"
+                    accept=".pdf,.doc,.docx,.xls,.xlsx"
+                  />
+                </div>
+              )}
+
               {/* Remaining Slots */}
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <Badge variant="outline" className="text-xs">
-                  {uploadedDocs.length}/5 Documents
+                  {uniqueDocTypes.size}/5 Document Types
                 </Badge>
-                <span>{remainingSlots} slot{remainingSlots !== 1 ? "s" : ""} remaining</span>
+                <span>{remainingSlots} type{remainingSlots !== 1 ? "s" : ""} remaining</span>
               </div>
 
-              {/* Uploaded Documents */}
+              {/* Uploaded Files */}
               {uploadedDocs.length > 0 && (
-                <div className="space-y-2 pt-2">
-                  <h4 className="text-sm font-semibold">Uploaded Documents</h4>
-                  {uploadedDocs.map((docType) => (
-                    <div
-                      key={docType}
-                      className="flex items-center justify-between p-3 rounded border border-green-500/30 bg-green-500/5"
-                    >
-                      <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-green-600" />
-                        <span className="text-sm">{docType}</span>
-                      </div>
-                      <button
-                        onClick={() => handleRemoveDocument(docType)}
-                        className="text-xs text-muted-foreground hover:text-destructive"
-                        data-testid={`button-remove-${docType}`}
+                <div className="space-y-3 pt-2">
+                  <h4 className="text-sm font-semibold">Uploaded Files ({uploadedDocs.length})</h4>
+                  <div className="space-y-2 max-h-96 overflow-y-auto">
+                    {uploadedDocs.map((file, index) => (
+                      <div
+                        key={index}
+                        className="flex items-center justify-between p-3 rounded border border-green-500/30 bg-green-500/5"
                       >
-                        Remove
-                      </button>
-                    </div>
-                  ))}
+                        <div className="flex items-center gap-2 min-w-0 flex-1">
+                          <CheckCircle2 className="w-4 h-4 text-green-600 flex-shrink-0" />
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">{file.fileName}</p>
+                            <p className="text-xs text-muted-foreground">{file.docType} • {formatFileSize(file.fileSize)}</p>
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleRemoveFile(index)}
+                          className="ml-2 p-1 text-muted-foreground hover:text-destructive flex-shrink-0"
+                          data-testid={`button-remove-file-${index}`}
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {remainingSlots === 0 && (
                 <Alert className="border-green-500/50 bg-green-500/10">
                   <CheckCircle2 className="h-4 w-4 text-green-600" />
-                  <AlertTitle className="text-green-600 text-sm">All slots filled</AlertTitle>
+                  <AlertTitle className="text-green-600 text-sm">All document types added</AlertTitle>
                   <AlertDescription className="text-xs">
-                    You have uploaded all required documents. Ready to proceed.
+                    You have uploaded all 5 required document types. Ready to proceed to workspace.
                   </AlertDescription>
                 </Alert>
               )}
