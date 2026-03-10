@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import NotFound from "@/pages/not-found";
 
+import Onboarding from "./pages/onboarding";
 import Ingestion from "./pages/ingestion";
 import Workspace from "./pages/workspace";
 import Output from "./pages/output";
@@ -13,8 +14,9 @@ function Router() {
   return (
     <Switch>
       <Route path="/">
-        <Redirect to="/ingestion" />
+        <Redirect to="/onboarding" />
       </Route>
+      <Route path="/onboarding" component={Onboarding} />
       <Route path="/ingestion" component={Ingestion} />
       <Route path="/workspace" component={Workspace} />
       <Route path="/output" component={Output} />

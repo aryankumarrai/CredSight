@@ -1,11 +1,12 @@
 import { ReactNode } from "react";
 import { Link, useLocation } from "wouter";
-import { Database, LayoutDashboard, FileText } from "lucide-react";
+import { UserCheck, Database, LayoutDashboard, FileText } from "lucide-react";
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const [location] = useLocation();
 
   const navItems = [
+    { title: "Onboarding", url: "/onboarding", icon: UserCheck },
     { title: "Ingestion", url: "/ingestion", icon: Database },
     { title: "Workspace", url: "/workspace", icon: LayoutDashboard },
     { title: "Output", url: "/output", icon: FileText },

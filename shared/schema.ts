@@ -7,6 +7,16 @@ export const creditAssessments = pgTable("credit_assessments", {
   companyName: text("company_name").notNull().default("Demo Company"),
   status: text("status").notNull().default("pending"),
   
+  // Screen 0: Onboarding
+  cin: text("cin"),
+  pan: text("pan"),
+  sector: text("sector"),
+  turnover: text("turnover"),
+  loanType: text("loan_type"),
+  loanAmount: integer("loan_amount"),
+  loanTenure: text("loan_tenure"),
+  expectedInterest: text("expected_interest"),
+  
   // Screen 1: Ingestion
   uploadedFiles: jsonb("uploaded_files").$type<{name: string, type: string, status: string}[]>().default([]),
   autoRedactPii: boolean("auto_redact_pii").default(true),
