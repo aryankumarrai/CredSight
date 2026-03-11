@@ -3,7 +3,7 @@ import {
   creditAssessments,
   type InsertCreditAssessment,
   type CreditAssessment,
-} from "@shared/schema";
+} from "../shared/schema";
 import { eq } from "drizzle-orm";
 
 export interface IStorage {
