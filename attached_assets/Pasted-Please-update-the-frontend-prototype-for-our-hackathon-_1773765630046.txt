@@ -1,0 +1,47 @@
+Please update the frontend prototype for our hackathon submission by making the following 3 critical changes. 
+
+1. UPDATE THE GLOBAL MOCK DATA (VIVRITI CAPITAL)
+Please locate where the mock data/state is stored for the application (the data that populates the Onboarding, Dashboard, and PDF Generation). Replace it entirely with this new JSON object tailored for Vivriti Capital. Ensure both the Dashboard UI and the PDF generator use this EXACT data so there are no mismatches:
+
+{
+    "dateGenerated": "12-March-2026",
+    "entityDetails": {
+        "name": "Vivriti Capital Limited",
+        "cin": "U65929TN2017PLC117196",
+        "pan": "AABCV1234F",
+        "sector": "Mid-Market Corporate NBFC",
+        "turnover": "₹7,000+ Crores (AUM)"
+    },
+    "loanDetails": {
+        "type": "Working Capital Facility",
+        "requestedAmount": "₹100 Crores",
+        "tenure": "24 Months",
+        "expectedInterest": "9.25%"
+    },
+    "decisionStatus": "APPROVED", 
+    "decisionColor": "#10b981",
+    "approvedLimit": "₹100 Crores",
+    "interestRate": "9.25%",
+    "reasoningEngine": "Extraction from Vivriti Capital's Annual Report confirms exceptional asset quality with gross NPAs maintained well below industry averages. Their proprietary tech-enabled underwriting and diversified mid-market exposure provide strong downside protection. Capital adequacy remains robust. Full limit approved.",
+    "swotAnalysis": {
+        "strengths": "Highly diversified mid-market corporate portfolio; industry-leading proprietary risk assessment models; strong institutional backing and equity base.",
+        "weaknesses": "Relatively higher cost of funds compared to top-tier legacy banks operating in the same corporate segment.",
+        "opportunities": "Significant growth potential in co-lending partnerships and supply chain finance leveraging digital public infrastructure.",
+        "threats": "Intensifying competition from larger legacy banks expanding into the mid-market corporate lending space."
+    }
+}
+
+2. UPDATE THE OUTPUT DASHBOARD UI (REMOVE FIVE Cs)
+On the final Output/Recommendation Dashboard view:
+- Please completely remove or comment out the "Five Cs Assessment" UI component (the cards for Character, Capacity, Capital, Collateral, Conditions). 
+- Ensure the layout flows smoothly from the "Overall Risk Assessment" score directly down into the "SWOT Analysis" grid.
+
+3. VERIFY THE INGESTION DROPDOWN CATEGORIES
+On the Document Upload / Ingestion screen, please ensure the "Select Document Type" dropdown contains exactly these 5 options so I can demonstrate a multi-file upload:
+- ALM (Asset-Liability Management)
+- Shareholding Pattern
+- Borrowing Profile
+- Annual Reports (P&L, Cashflow, Balance Sheet)
+- Portfolio Cuts/Performance Data
+
+Please implement these changes and ensure the app builds successfully.
