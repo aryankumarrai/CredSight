@@ -8,14 +8,14 @@ import { Button } from "@/components/ui/button";
 import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
 
 export default function Workspace() {
-  const [observation, setObservation] = useState("Factory found operating at 40% capacity");
+  const [observation, setObservation] = useState("Proprietary loan origination system demoed successfully during site visit.");
 
-  const riskScore = 72;
+  const riskScore = 28;
 
   const feedItems = [
     { source: "News", title: "New RBI regulations impacting sector", tag: "Sector Risk", color: "text-amber-500" },
-    { source: "e-Courts", title: "Vendor dispute filed at District Court, Pune", tag: "Legal Risk", color: "text-red-500" },
-    { source: "Market Sentiment", title: "Positive sentiment for manufacturing sector amid recovery", tag: "Market Signal", color: "text-emerald-500" },
+    { source: "e-Courts", title: "No material litigation found across operating jurisdictions.", tag: "Clean", color: "text-emerald-500" },
+    { source: "Market Sentiment", title: "Positive sentiment for mid-market corporate lending sector amid recovery.", tag: "Market Signal", color: "text-emerald-500" },
     { source: "Promoter", title: "Cross-holding analysis clear", tag: "Clean", color: "text-emerald-500" },
   ];
 
@@ -63,12 +63,12 @@ export default function Workspace() {
                 <div className="flex items-end justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground mb-2">Current Risk Score</p>
-                    <p className="text-4xl font-bold">{riskScore}</p>
-                    <p className="text-xs text-primary mt-1">AI adjusting +2% based on capacity note</p>
+                    <p className="text-4xl font-bold text-emerald-500">{riskScore}</p>
+                    <p className="text-xs text-emerald-500 mt-1">AI adjusting based on strong asset quality indicators</p>
                   </div>
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-primary">{riskScore}%</div>
-                    <div className="text-xs text-muted-foreground">High Risk</div>
+                    <div className="text-3xl font-bold text-emerald-500">{riskScore}%</div>
+                    <div className="text-xs text-muted-foreground">Low Risk</div>
                   </div>
                 </div>
               </CardContent>

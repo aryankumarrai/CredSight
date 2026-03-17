@@ -150,7 +150,7 @@ export default function Onboarding() {
                   <Input
                     id="companyName"
                     name="companyName"
-                    placeholder="e.g., Apex Manufacturing Pvt. Ltd."
+                    placeholder="e.g., Vivriti Capital Limited"
                     value={formData.companyName}
                     onChange={handleInputChange}
                     className="mt-2"
@@ -165,7 +165,7 @@ export default function Onboarding() {
                   <Input
                     id="cin"
                     name="cin"
-                    placeholder="e.g., U74999MH2005PTC000000"
+                    placeholder="e.g., U65929TN2017PLC117196"
                     value={formData.cin}
                     onChange={handleInputChange}
                     className="mt-2"
@@ -180,7 +180,7 @@ export default function Onboarding() {
                   <Input
                     id="pan"
                     name="pan"
-                    placeholder="e.g., AAACR5055K"
+                    placeholder="e.g., AABCV1234F"
                     value={formData.pan}
                     onChange={handleInputChange}
                     className="mt-2"
