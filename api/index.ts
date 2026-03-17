@@ -8,8 +8,18 @@ app.use(express.urlencoded({ extended: false }));
 
 const httpServer = createServer(app);
 
-// In Vercel, we just need to export the app. 
-// Routes are registered, but we don't call .listen()
-registerRoutes(httpServer, app).catch(console.error);
+let routesRegistered = false;
 
-export default app;
+async function ensureRoutes() {
+  if (!routesRegistered) {
+    await registerRoutes(httpServer, app);
+    routesRegistered = true;
+  }
+}
+
+const handler = async (req: any, res: any) => {
+  await ensureRoutes();
+  app(req, res);
+};
+
+export default handler;
