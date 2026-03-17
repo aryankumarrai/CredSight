@@ -484,11 +484,11 @@ export default function Ingestion() {
                 <div className="rounded border border-card-border p-3 font-mono text-xs space-y-1">
                   <div className="flex justify-between">
                     <span>Account:</span>
-                    <span className={isRedacting ? "text-muted-foreground" : "text-emerald-400"}>{isRedacting ? "████" : "Aarav"}</span>
+                    <span className={isRedacting ? "text-muted-foreground" : "text-emerald-400"}>{isRedacting ? "███████████████" : "Vivriti Capital"}</span>
                   </div>
                   <div className="flex justify-between">
                     <span>PAN:</span>
-                    <span className={isRedacting ? "text-muted-foreground" : "text-emerald-400"}>{isRedacting ? "██████" : "ABCD1234F"}</span>
+                    <span className={isRedacting ? "text-muted-foreground" : "text-emerald-400"}>{isRedacting ? "██████████" : "AABCV1234F"}</span>
                   </div>
                 </div>
               </CardContent>
