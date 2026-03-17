@@ -8,31 +8,31 @@ async function seedDatabase() {
   const existingItems = await storage.getAssessments();
   if (existingItems.length === 0) {
     await storage.createAssessment({
-      companyName: "Demo Company Pvt Ltd",
+      companyName: "Vivriti Capital Limited",
       status: "under_review",
       uploadedFiles: [
-        { name: "GST Filings", type: "csv", status: "Processed" },
-        { name: "ITR 2022-23", type: "pdf", status: "Processed" },
-        { name: "Bank Statements", type: "pdf", status: "Processed" },
-        { name: "Annual Report", type: "pdf", status: "VLM Vision Parsing: Active" }
+        { name: "ALM Report", type: "pdf", status: "Processed" },
+        { name: "Shareholding Pattern", type: "pdf", status: "Processed" },
+        { name: "Borrowing Profile", type: "pdf", status: "Processed" },
+        { name: "Annual Report 2024-25", type: "pdf", status: "VLM Vision Parsing: Active" }
       ],
       autoRedactPii: true,
-      discrepancyAlert: "Alert: 15% discrepancy detected between GSTR-2A (Input Tax Credit) and GSTR-3B (Sales Liability)",
-      officerObservations: "Factory found operating at 40% capacity",
-      riskScore: 52,
+      discrepancyAlert: "",
+      officerObservations: "Exceptional asset quality with gross NPAs maintained well below industry averages.",
+      riskScore: 28,
       externalIntelligence: [
-        { source: "News", headline: "New RBI regulations impacting sector", impact: "Medium" },
-        { source: "e-Courts Portal", headline: "Civil dispute filed against promoters", impact: "High litigation risk" }
+        { source: "News", headline: "Vivriti Capital expands co-lending partnerships", impact: "Positive" },
+        { source: "Market Sentiment", headline: "Strong institutional confidence in mid-market NBFC segment", impact: "Low Risk" }
       ],
-      recommendation: "REJECT",
-      loanLimit: 50000000,
-      interestRate: "10.5%",
-      characterScore: "Fair",
-      capacityScore: "Average",
+      recommendation: "APPROVED",
+      loanLimit: 1000000000,
+      interestRate: "9.25%",
+      characterScore: "Excellent",
+      capacityScore: "Strong",
       capitalScore: "Strong",
-      collateralScore: "Good",
-      conditionsScore: "Poor",
-      explanationLogic: "Rejected due to high litigation risk found in secondary research despite strong GST flows"
+      collateralScore: "Strong",
+      conditionsScore: "Good",
+      explanationLogic: "Extraction from Vivriti Capital's Annual Report confirms exceptional asset quality with gross NPAs maintained well below industry averages. Their proprietary tech-enabled underwriting and diversified mid-market exposure provide strong downside protection. Capital adequacy remains robust. Full limit approved."
     });
   }
 }

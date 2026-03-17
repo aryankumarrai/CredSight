@@ -2,13 +2,45 @@ import { useState } from "react";
 import { AppLayout } from "@/components/layout";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { ShieldAlert, Briefcase, Wallet, Building, FileSignature, Scale, Download, TrendingUp, AlertTriangle, Zap, Target } from "lucide-react";
+import { Download, TrendingUp, AlertTriangle, Zap, Target } from "lucide-react";
 import { RiskGauge } from "@/components/risk-gauge";
 
+const mockData = {
+  dateGenerated: "12-March-2026",
+  entityDetails: {
+    name: "Vivriti Capital Limited",
+    cin: "U65929TN2017PLC117196",
+    pan: "AABCV1234F",
+    sector: "Mid-Market Corporate NBFC",
+    turnover: "₹7,000+ Crores (AUM)",
+  },
+  loanDetails: {
+    type: "Working Capital Facility",
+    requestedAmount: "₹100 Crores",
+    tenure: "24 Months",
+    expectedInterest: "9.25%",
+  },
+  decisionStatus: "APPROVED",
+  decisionColor: "#10b981",
+  approvedLimit: "₹100 Crores",
+  interestRate: "9.25%",
+  reasoningEngine:
+    "Extraction from Vivriti Capital's Annual Report confirms exceptional asset quality with gross NPAs maintained well below industry averages. Their proprietary tech-enabled underwriting and diversified mid-market exposure provide strong downside protection. Capital adequacy remains robust. Full limit approved.",
+  swotAnalysis: {
+    strengths:
+      "Highly diversified mid-market corporate portfolio; industry-leading proprietary risk assessment models; strong institutional backing and equity base.",
+    weaknesses:
+      "Relatively higher cost of funds compared to top-tier legacy banks operating in the same corporate segment.",
+    opportunities:
+      "Significant growth potential in co-lending partnerships and supply chain finance leveraging digital public infrastructure.",
+    threats:
+      "Intensifying competition from larger legacy banks expanding into the mid-market corporate lending space.",
+  },
+};
+
 export default function Output() {
-  const [dialogOpen, setDialogOpen] = useState(false);
+  const [_unused] = useState(false);
 
   const downloadPDF = () => {
     const element = document.createElement("div");
@@ -20,29 +52,41 @@ export default function Output() {
         </div>
         
         <div style="display: flex; justify-content: space-between; margin-bottom: 30px;">
-          <div><strong>Borrower:</strong> Apex Manufacturing Pvt. Ltd.</div>
-          <div><strong>Date:</strong> 10-March-2026</div>
+          <div><strong>Borrower:</strong> ${mockData.entityDetails.name}</div>
+          <div><strong>Date:</strong> ${mockData.dateGenerated}</div>
+        </div>
+
+        <div style="margin-bottom: 20px; font-size: 14px;">
+          <div style="margin: 5px 0;"><strong>CIN:</strong> ${mockData.entityDetails.cin}</div>
+          <div style="margin: 5px 0;"><strong>PAN:</strong> ${mockData.entityDetails.pan}</div>
+          <div style="margin: 5px 0;"><strong>Sector:</strong> ${mockData.entityDetails.sector}</div>
+          <div style="margin: 5px 0;"><strong>AUM / Turnover:</strong> ${mockData.entityDetails.turnover}</div>
+        </div>
+
+        <div style="margin-bottom: 20px; font-size: 14px;">
+          <div style="margin: 5px 0;"><strong>Loan Type:</strong> ${mockData.loanDetails.type}</div>
+          <div style="margin: 5px 0;"><strong>Requested Amount:</strong> ${mockData.loanDetails.requestedAmount}</div>
+          <div style="margin: 5px 0;"><strong>Tenure:</strong> ${mockData.loanDetails.tenure}</div>
         </div>
         
-        <div style="border-left: 5px solid #f4a460; background: #fff8f0; padding: 20px; margin-bottom: 30px;">
-          <h3 style="margin: 0 0 15px 0; color: #003366;">Executive AI Recommendation: <span style="color: #f4a460; font-weight: bold;">PARTIAL APPROVAL</span></h3>
-          <div style="margin: 5px 0;"><strong>Requested Limit:</strong> ₹50 Crores</div>
-          <div style="margin: 5px 0;"><strong>Approved Limit:</strong> ₹35 Crores</div>
-          <div style="margin: 5px 0;"><strong>Risk Premium (Interest):</strong> 9.5%</div>
+        <div style="border-left: 5px solid ${mockData.decisionColor}; background: #f0fdf4; padding: 20px; margin-bottom: 30px;">
+          <h3 style="margin: 0 0 15px 0; color: #003366;">Executive AI Recommendation: <span style="color: ${mockData.decisionColor}; font-weight: bold;">${mockData.decisionStatus}</span></h3>
+          <div style="margin: 5px 0;"><strong>Requested Limit:</strong> ${mockData.loanDetails.requestedAmount}</div>
+          <div style="margin: 5px 0;"><strong>Approved Limit:</strong> ${mockData.approvedLimit}</div>
+          <div style="margin: 5px 0;"><strong>Interest Rate:</strong> ${mockData.interestRate}</div>
         </div>
         
-        <h3 style="color: #003366; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Explainability & Decision Logic</h3>
+        <h3 style="color: #003366; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">Explainability &amp; Decision Logic</h3>
         <div style="background: #f0f4ff; padding: 15px; margin-bottom: 30px; border-radius: 4px; font-size: 14px;">
-          <p style="margin: 0;">Requested limit of ₹50Cr reduced to ₹35Cr due to high litigation risk found on the e-Courts portal, alongside a 12% discrepancy between GSTR-3B and Bank Statement inflows. However, overall capital capacity remains strong.</p>
+          <p style="margin: 0;">${mockData.reasoningEngine}</p>
         </div>
-        
-        <h3 style="color: #003366; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">The Five Cs of Credit</h3>
+
+        <h3 style="color: #003366; margin-bottom: 15px; border-bottom: 1px solid #ddd; padding-bottom: 10px;">SWOT Analysis</h3>
         <ul style="line-height: 1.8; font-size: 14px;">
-          <li><strong>Character:</strong> [Flagged] Promoters involved in ongoing civil dispute (Source: e-Courts web scrape).</li>
-          <li><strong>Capacity:</strong> [Moderate] Factory observed operating at 40% capacity during primary site visit.</li>
-          <li><strong>Capital:</strong> [Strong] Healthy equity retention and consistent YoY profit margins based on Annual Reports.</li>
-          <li><strong>Collateral:</strong> [Adequate] Primary industrial real estate thoroughly covers reduced ₹35Cr limit.</li>
-          <li><strong>Conditions:</strong> [Caution] New RBI regulations on the sector may create short-term headwinds.</li>
+          <li><strong>Strengths:</strong> ${mockData.swotAnalysis.strengths}</li>
+          <li><strong>Weaknesses:</strong> ${mockData.swotAnalysis.weaknesses}</li>
+          <li><strong>Opportunities:</strong> ${mockData.swotAnalysis.opportunities}</li>
+          <li><strong>Threats:</strong> ${mockData.swotAnalysis.threats}</li>
         </ul>
         
         <div style="margin-top: 40px; border-top: 1px solid #ddd; padding-top: 20px; font-size: 12px; color: #666;">
@@ -54,14 +98,7 @@ export default function Output() {
         </div>
       </div>
     `;
-    
-    const canvas = document.createElement("canvas");
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-    
-    canvas.width = 800;
-    canvas.height = 1200;
-    
+
     const printWindow = window.open("", "", "height=800,width=800");
     if (printWindow) {
       printWindow.document.write(element.innerHTML);
@@ -71,49 +108,37 @@ export default function Output() {
   };
 
   const swotData = [
-    { 
-      category: "Strengths", 
-      icon: TrendingUp, 
+    {
+      category: "Strengths",
+      icon: TrendingUp,
       color: "text-emerald-500",
       bgColor: "bg-emerald-500/10",
       borderColor: "border-emerald-500/30",
-      items: [
-        "Strong borrowing profile and consistent portfolio performance",
-        "Healthy equity retention and YoY profit margins"
-      ]
+      items: mockData.swotAnalysis.strengths.split(";").map((s) => s.trim()),
     },
-    { 
-      category: "Weaknesses", 
-      icon: AlertTriangle, 
+    {
+      category: "Weaknesses",
+      icon: AlertTriangle,
       color: "text-red-500",
       bgColor: "bg-red-500/10",
       borderColor: "border-red-500/30",
-      items: [
-        "High asset-liability mismatch in the short term (ALM data)",
-        "Factory operating at 40% capacity during site visit"
-      ]
+      items: [mockData.swotAnalysis.weaknesses],
     },
-    { 
-      category: "Opportunities", 
-      icon: Target, 
+    {
+      category: "Opportunities",
+      icon: Target,
       color: "text-blue-500",
       bgColor: "bg-blue-500/10",
       borderColor: "border-blue-500/30",
-      items: [
-        "Favorable macro trends in the entity's sector",
-        "New RBI initiatives supporting manufacturing growth"
-      ]
+      items: mockData.swotAnalysis.opportunities.split("and").map((s) => s.trim()),
     },
-    { 
-      category: "Threats", 
-      icon: Zap, 
+    {
+      category: "Threats",
+      icon: Zap,
       color: "text-amber-500",
       bgColor: "bg-amber-500/10",
       borderColor: "border-amber-500/30",
-      items: [
-        "Pending legal disputes found via secondary research",
-        "Regulatory headwinds in sector operations"
-      ]
+      items: [mockData.swotAnalysis.threats],
     },
   ];
 
@@ -138,21 +163,26 @@ export default function Output() {
           </Button>
         </div>
 
-        <Card className="card-simple border-red-500/30 bg-red-500/5">
+        <Card className="card-simple border-emerald-500/30 bg-emerald-500/5">
           <CardContent className="p-4 sm:p-8 text-center">
             <div className="mb-6">
               <p className="text-xs sm:text-sm text-muted-foreground mb-2">FINAL DECISION</p>
               <h2 className="text-2xl sm:text-4xl font-bold mb-4">
-                <span className="block sm:inline">RECOMMENDATION:</span> <span className="text-red-500">REJECT</span>
+                <span className="block sm:inline">RECOMMENDATION:</span>{" "}
+                <span style={{ color: mockData.decisionColor }}>{mockData.decisionStatus}</span>
               </h2>
               <div className="flex flex-col sm:flex-row justify-center gap-4 sm:gap-8">
                 <div>
-                  <p className="text-xs text-muted-foreground">Suggested Limit</p>
-                  <p className="text-lg sm:text-xl font-bold text-muted-foreground line-through">₹5.00 Cr</p>
+                  <p className="text-xs text-muted-foreground">Approved Limit</p>
+                  <p className="text-lg sm:text-xl font-bold" style={{ color: mockData.decisionColor }}>
+                    {mockData.approvedLimit}
+                  </p>
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">Interest Rate</p>
-                  <p className="text-lg sm:text-xl font-bold text-muted-foreground">N/A</p>
+                  <p className="text-lg sm:text-xl font-bold" style={{ color: mockData.decisionColor }}>
+                    {mockData.interestRate}
+                  </p>
                 </div>
               </div>
             </div>
@@ -165,7 +195,7 @@ export default function Output() {
           </CardHeader>
           <CardContent className="flex justify-center py-6 sm:py-8 px-4">
             <div className="w-full max-w-xs">
-              <RiskGauge score={72} label="Risk Score" data-testid="gauge-risk-score" />
+              <RiskGauge score={28} label="Risk Score" data-testid="gauge-risk-score" />
             </div>
           </CardContent>
         </Card>
@@ -201,36 +231,7 @@ export default function Output() {
             <CardTitle className="text-base">AI Explainability</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm leading-relaxed">
-              Rejected due to{" "}
-              <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-                <DialogTrigger asChild>
-                  <button className="font-bold text-red-500 hover:text-red-400 border-b border-red-500 hover-dim">
-                    high litigation risk
-                  </button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle className="flex items-center gap-2">
-                      <Scale className="w-4 h-4" /> Court Document
-                    </DialogTitle>
-                  </DialogHeader>
-                  <div className="bg-white text-black p-6 rounded text-sm space-y-3 max-h-[400px] overflow-y-auto">
-                    <h3 className="font-bold text-center">District Court of Pune - Civil Suit 8991/2023</h3>
-                    <div className="border-l-4 border-red-500 pl-4 py-2 bg-red-50">
-                      <p className="font-bold">Plaintiff:</p>
-                      <p>Vendor Supplies Pvt Ltd vs Demo Company Ltd</p>
-                    </div>
-                    <div className="border-l-4 border-red-500 pl-4 py-2 bg-yellow-50">
-                      <p className="font-bold text-red-600">Claim: ₹2.4 Crores outstanding payment</p>
-                      <p className="text-sm">14 months default period</p>
-                    </div>
-                    <p className="text-xs text-gray-600">Status: Pending Hearing | Extracted: e-Courts Portal API</p>
-                  </div>
-                </DialogContent>
-              </Dialog>
-              {" "}found in secondary research, despite strong GST flows.
-            </p>
+            <p className="text-sm leading-relaxed">{mockData.reasoningEngine}</p>
           </CardContent>
         </Card>
       </div>
